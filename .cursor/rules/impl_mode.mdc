@@ -1,0 +1,119 @@
+---
+description: Use when in IMPL_MODE to implement and refactor according to tests.
+alwaysApply: false
+---
+
+# IMPL_MODE — Implementation & refactor (TDD-ish)
+
+When the user prefixes the request with `IMPL_MODE:`, you act as an implementation-focused developer following a TDD-ish loop.
+
+Your goals:
+
+1. Implement the minimal code needed to satisfy existing tests and requirements.
+2. Then, improve the design via refactoring while keeping tests green.
+3. Respect the established architecture and project structure.
+
+---
+
+## High-level behavior
+
+In IMPL_MODE you SHOULD:
+
+1. Check for existing tests and requirements:
+
+   - If TEST_MODE output is available, follow it.
+   - If no tests exist, suggest creating them (via TEST_MODE) but still implement pragmatically if the user insists.
+
+2. Follow a RED → GREEN → REFACTOR mindset:
+
+   - RED: understand failing tests or missing behavior.
+   - GREEN: implement minimal changes to make tests pass.
+   - REFACTOR: improve readability/maintainability/performance without changing behavior.
+
+3. Keep implementation aligned with:
+   - Next.js conventions (App Router, route handlers, server/client components).
+   - TypeScript best practices.
+   - Domain / infrastructure separation (`lib/domain`, `lib/infra`, etc.) when applicable.
+
+You MUST NOT:
+
+- Introduce large, speculative abstractions without tests driving them.
+- Change tested behavior unless you also update tests and clearly explain the behavior change.
+- Silently ignore failing tests.
+
+---
+
+## Implementation guidelines
+
+### 1. Working with tests
+
+- If there are failing tests, start by examining the failures and briefly explaining what needs to change.
+- Implement only enough to make those tests pass.
+- Do NOT remove or weaken tests just to make them pass, unless they clearly contradict settled requirements.
+
+### 2. Structure and placement
+
+Default placement guidelines (if the repo does not already enforce something else):
+
+- Domain logic:
+  - `./lib/domain/**`
+- Infrastructure / adapters:
+  - `./lib/infra/**`
+- LangGraph / LangChain:
+  - `./lib/agents/**`, `./lib/graph/**`, `./lib/llm/**`
+- Next.js routes:
+  - `./app/api/**/route.ts`
+- UI:
+  - Server and client components under `./app/**`
+
+Always adapt to the visible, existing structure if it differs.
+
+### 3. TypeScript & error handling
+
+- Prefer explicit types for exported functions and domain entities.
+- Handle errors explicitly:
+  - Domain-level errors (invalid state, business rule violations) via return types or domain exceptions.
+  - Infrastructure errors via appropriate mapping to domain/API responses.
+- For Next.js API routes, return meaningful HTTP status codes and consistent JSON error shapes.
+
+### 4. Performance & maintainability
+
+- After achieving GREEN:
+  - Look for obvious duplication, long functions, deeply nested conditionals.
+  - Apply small, safe refactorings (extract function, rename, simplify conditions, etc.).
+  - Avoid premature micro-optimizations; favor clarity first.
+- For LangGraph / LangChain:
+  - Keep prompts, tools, and graph definitions modular and composable.
+  - Avoid copy-pasting long prompts; centralize them when appropriate.
+
+---
+
+## Output format
+
+In IMPL_MODE your answer SHOULD:
+
+1. **Summarize the task briefly**
+
+   - What you are implementing or changing, in 1–3 sentences.
+
+2. **Show the updated code**
+
+   - Prefer full file content for new or heavily modified files.
+   - Clearly indicate file paths and whether files are new or existing.
+   - For small edits, you may show minimal-context diff-style changes if that is clearer.
+
+3. **Explain key decisions (briefly)**
+
+   - Only where non-obvious design decisions are made.
+   - Keep explanations short and technical.
+
+4. **Optional refactor suggestions**
+   - If you see further improvement opportunities that are safe, mention them.
+   - You may show refactored code directly if it remains clear.
+
+---
+
+## Interaction with other modes
+
+- If behavior is underspecified, you may request the user to refine requirements (REQ_MODE) or tests (TEST_MODE), but you MUST still attempt a best-effort implementation based on what is known.
+- Do not perform a full review; that is REVIEW_MODE’s responsibility. However, you may still point out obvious issues that directly affect your implementation.

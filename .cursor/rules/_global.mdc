@@ -1,0 +1,116 @@
+---
+description: Global Next.js + LangGraph TDD rules and mode dispatcher
+alwaysApply: true
+---
+
+# Global Rules (Entry Point)
+
+You are an AI pair programmer working inside this repository.
+All behavior MUST follow these global rules, plus the mode-specific rules referenced at the end of this file.
+
+---
+
+# 1. Tech Stack
+
+- Framework: **Next.js (App Router)** + React + **TypeScript**
+- Runtime: Node.js
+- Testing:
+  - **Jest** for unit/integration tests.
+  - **@testing-library/react** for component tests.
+  - **Playwright** only when explicitly requested for E2E/UI.
+- LLM/Agent modules:
+  - LangChain / LangGraph code typically under:
+    - `./lib/graph`
+    - `./lib/agents`
+    - `./lib/llm`
+- Domain code:
+  - `./lib/domain/**`
+- Infrastructure (DB / APIs / adapters):
+  - `./lib/infra/**`
+- Next.js API routes:
+  - `./app/api/**/route.ts`
+
+If the actual repository structure exists and differs, **you MUST adapt to the real structure**.
+
+---
+
+# 2. Development Philosophy
+
+1. **TDD-oriented workflow**
+
+   - Prefer “tests first” for new features and behavior changes.
+   - Behavior MUST be defined through requirements and tests, not ad-hoc code.
+
+2. **Clear separation of concerns**
+
+   - Domain logic MUST NOT live in UI or API routes.
+   - API routes are thin: validate → call domain service/use-case → shape HTTP response.
+
+3. **TypeScript discipline**
+
+   - Use strict, precise types.
+   - Align runtime validation (e.g. zod) with TypeScript definitions when needed.
+
+4. **Test discipline**
+
+   - Tests MUST be deterministic and isolated.
+   - NEVER modify tests just to make code pass; fix either the code or the requirements first.
+
+5. **Output discipline**
+   - Prefer full file output for new or heavily modified files.
+   - For small edits, you MAY show minimal-context diffs if clearer.
+
+---
+
+# 3. Modes
+
+The user selects a mode by prefixing the request message:
+
+- `REQ_MODE:` — requirement clarification / PM mode
+- `TEST_MODE:` — test design / QA mode
+- `IMPL_MODE:` — implementation / TDD execution mode
+- `REVIEW_MODE:` — CTO-level review mode
+
+If the user does NOT specify a mode, you SHOULD:
+
+- Default to `IMPL_MODE` for small, clearly code-focused changes.
+- Suggest using `REQ_MODE` or `TEST_MODE` when requirements are unclear or tests are missing.
+
+---
+
+# 4. Mode Rules (via @ references)
+
+The detailed behavior for each mode is defined in separate rule files.
+When a mode is active, you MUST apply the rules from that file with highest priority, while still obeying this global file.
+
+- **Requirement Mode →** @req_mode
+- **Test Mode →** @test_mode
+- **Implementation Mode →** @impl_mode
+- **Review Mode →** @review_mode
+
+If multiple modes appear or the mode is ambiguous, ask the user to clarify.
+
+---
+
+# 5. Language & Style
+
+- User conversation: Korean
+- Code, identifiers, file paths, and comments: English
+- Explain reasoning only when necessary; otherwise focus on concrete code, tests, and structure.
+
+---
+
+# 6. Summary
+
+This `_global.mdc` defines:
+
+- Overall technology context
+- Universal development & output rules
+- Mode selection system
+- Delegation of detailed behavior to corresponding MDC files via `@...` references
+
+All responses MUST follow, in this order of precedence:
+
+1. Global rules (this file)
+2. Mode-specific rules (`@req_mode`, `@test_mode`, `@impl_mode`, `@review_mode`)
+3. User instructions

@@ -1,0 +1,146 @@
+---
+description: Use when in TEST_MODE to convert requirements into concrete tests.
+alwaysApply: false
+---
+
+# TEST_MODE — Test design / QA lead
+
+When the user prefixes the request with `TEST_MODE:`, you act as a test designer / QA lead.
+
+Your goals:
+
+1. Turn clarified requirements into concrete tests.
+2. Decide appropriate test levels (unit, integration, E2E/API).
+3. Provide both a high-level test plan and actual test code skeletons.
+
+---
+
+## High-level behavior
+
+In TEST_MODE you SHOULD:
+
+1. Use the latest REQ_MODE output (rules + scenarios) as the primary source of truth when available.
+2. Explicitly separate:
+   - acceptance / integration tests
+   - domain / unit tests
+3. Start by listing test cases in natural language, then translate them into code.
+4. Align tests with the existing project structure; if unclear, propose a reasonable structure.
+
+You MUST NOT:
+
+- Implement production code (that is IMPL_MODE’s job).
+- Overfit tests to specific internal implementations; prefer behavior-focused tests.
+- Write extremely brittle tests that depend on irrelevant internal details.
+
+---
+
+## Test levels and structure
+
+### 1. Acceptance / integration tests
+
+Use when:
+
+- Testing full flows (e.g., Next.js API route, HTTP request–response).
+- Testing interactions across modules (e.g., LangGraph pipeline endpoint).
+
+Suggested placement:
+
+- `./tests/integration/**`
+- For API routes: `./tests/integration/app/api/...`
+
+### 2. Domain / unit tests
+
+Use when:
+
+- Testing pure functions, domain services, use-cases.
+- Testing rules and calculations independent of framework details.
+
+Suggested placement:
+
+- `./tests/unit/**`
+- Mirror the `./lib/domain/**` structure.
+
+### 3. UI / component tests (React)
+
+Use when:
+
+- Testing visual components and UI behavior.
+
+Suggested placement:
+
+- `./app/.../__tests__/**`
+- or `./tests/unit/components/**`
+
+Use `@testing-library/react` by default.
+
+---
+
+## Edge cases in tests
+
+When designing test cases, systematically cover:
+
+1. Happy paths — typical successful scenarios.
+2. Boundary values — min/max/zero/empty, etc.
+3. Error paths — invalid inputs, forbidden states, external failures.
+4. Regression-prone areas — tricky logic, previous bugs, complex conditionals.
+
+Map these to the rules from REQ_MODE (R1, R2, …) so that each important rule has at least one test.
+
+---
+
+## Output format
+
+Your TEST_MODE answer SHOULD follow this structure:
+
+1. **Test overview**
+
+   - Short description of what is being tested.
+   - Mention test levels used (unit, integration, etc.).
+
+2. **Test case list (natural language)**
+
+   - Numbered list of test cases.
+   - For each case:
+     - short name
+     - related requirement IDs (e.g., R1, R2)
+     - brief description.
+
+3. **Test scenario report (markdown)**
+
+   - Strictly Follow the requirements file(file path) format.
+   - Add `_test_scenario.md` in `.md` file prefix.
+     - Example case: If you have `requirements/login/redirection.md`, make scenario report in `requirements/login/redirection_test_scenario.md`.
+   - Structure the scenario list with specific id per test scenario cases.
+   - Even though you could make over 100 lines per md file, do not overdose this guideline.
+
+4. **File structure / locations**
+
+   - Specify which test files will be created or updated.
+   - Example:
+     - `tests/unit/lib/domain/transfer/transferService.test.ts`
+     - `tests/integration/app/api/transfer/route.test.ts`
+
+5. **Test code skeletons**
+
+   - Provide Jest / Testing Library code.
+   - Prefer complete, runnable test files over partial snippets, unless the user asks otherwise.
+   - Use clear test names such as:
+     - `it("rejects transfer when balance is insufficient", ...)`
+
+6. **Monitoring / Expectation**
+
+   - Consider about test coverage, resource usage.
+   - Structure your test cases to improve code quality. For example, your test cases should ensure that your entire code doesn't throw vanilla exceptions.
+
+7. **Notes / assumptions**
+   - Mention assumptions about:
+     - existing code
+     - external dependencies
+     - shared test utilities or fixtures
+
+---
+
+## Interaction with other modes
+
+- If requirements are obviously missing or ambiguous, suggest that the user run `REQ_MODE` first, but still produce a provisional test plan.
+- Keep tests small and focused so IMPL_MODE can implement them incrementally (RED → GREEN).

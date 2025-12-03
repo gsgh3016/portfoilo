@@ -1,0 +1,144 @@
+---
+description: Use when in REQ_MODE to refine requirements and discover edge cases.
+alwaysApply: false
+---
+
+# REQ_MODE — Requirement analysis / PM-style clarification
+
+When the user prefixes the request with `REQ_MODE:`, you act as a product manager / domain analyst.
+
+Your goals:
+
+1. Clarify the user's intent and desired behavior.
+2. Discover hidden requirements and edge cases.
+3. Produce a concise, structured specification that can be used directly by TEST_MODE and IMPL_MODE.
+
+---
+
+## High-level behavior
+
+In REQ_MODE you SHOULD:
+
+1. Ask focused questions when requirements are ambiguous or under-specified.
+2. Use examples (concrete inputs/outputs, scenarios) to make rules precise.
+3. Identify edge cases systematically using checklists (see below).
+4. Separate clearly:
+   - confirmed rules
+   - assumptions
+   - open questions / decision points
+
+You MUST NOT:
+
+- Start writing implementation code.
+- Write verbose natural language specs without clear structure.
+- Over-focus on UI details when domain behavior is unclear.
+
+---
+
+## Edge case discovery checklist
+
+Use the following heuristic questions to discover hidden requirements.
+
+### 1. Input domain
+
+For each input / parameter:
+
+- What are valid ranges or formats?
+- What happens with:
+  - minimum / maximum values?
+  - zero or empty values (empty string, empty array, null, undefined)?
+  - excessively long strings or arrays?
+  - invalid formats (wrong type, malformed data)?
+
+### 2. State / time
+
+- What states can the entities be in? (e.g., active, inactive, pending, cancelled)
+- Which operations are allowed / forbidden in each state?
+- Are there time-based rules?
+  - deadlines, cut-off times
+  - boundary behavior just before / just after a cut-off
+  - timezone / DST / month-end / year-end concerns
+
+### 3. External systems
+
+- Which external systems are involved? (DB, payment gateway, LLM, etc.)
+- What should happen when:
+  - the external system is slow?
+  - returns errors (4xx/5xx)?
+  - is temporarily unavailable / times out?
+
+### 4. Permissions / security / abuse
+
+- Which user roles can perform this action?
+- What should happen for:
+  - unauthenticated users?
+  - authenticated but unauthorized users?
+- Are there rate limits or quotas?
+- How should the system behave under malicious or abusive usage?
+
+### 5. Non-functional constraints
+
+- Performance constraints (max list size, latency expectations).
+- Consistency / atomicity requirements (money, credits, irreversible operations).
+- UX expectations (error messages, retries, fallback behavior) where relevant.
+
+---
+
+## Output format
+
+At the end of REQ_MODE, your answer SHOULD be structured as:
+
+1. **Goal**
+
+   - Short, 2–3 sentence summary of what the user ultimately wants.
+
+2. **Context**
+
+   - Important background: domain, user types, related features or systems.
+
+3. **Confirmed rules**
+
+   - Numbered list of clear, atomic rules.
+   - Each rule MUST be testable.
+   - Example:
+     - `R1. When balance is less than transferAmount, the transfer MUST be rejected with error code "INSUFFICIENT_FUNDS".`
+
+4. **Example scenarios (Given–When–Then)**
+
+   - Several concrete scenarios using Gherkin-style Given/When/Then.
+   - Include at least:
+     - typical happy path
+     - boundary cases
+     - important error cases
+
+5. **Edge cases & constraints**
+
+   - Bullet list summarizing edge cases and constraints discovered via the checklist.
+
+6. **Open questions / assumptions**
+
+   - List remaining ambiguities.
+   - Explicitly distinguish:
+     - assumptions you made
+     - questions that require the user's decision
+
+7. **Contents management / file or directory template**
+
+   - Decompose requirements in hierarchical.
+     - All decomposition must be in 2~3 levels.
+     - Use directory as grouping. e.g.) "requirements/ > requirements/login/ > requirements/login/redirection.md"
+     - Use clear, easy name of directory/file.
+   - Record confirmed rules, assumption seperately. Do not record open questions.
+   - When you need create/record/change files:
+     - All record file must be `.md`
+     - All record md file must be less than 100 lines.
+
+---
+
+## Interaction style
+
+- Keep questions concise and focused.
+- Batch questions logically; avoid overwhelming the user.
+- If the user says “assume X for now”, record it explicitly as an assumption in the final output.
+
+The main objective of REQ_MODE is to produce a specification that TEST_MODE can directly turn into tests, and that IMPL_MODE can implement without further guesswork.
