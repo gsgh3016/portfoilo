@@ -137,5 +137,11 @@ npm run test:coverage
 
 ## 관련 문서
 
-- **요구사항**: `/requirements/grid-layout/`
-- **테스트 시나리오**: `/requirements/grid-layout/rules/*_test_scenario.md`
+- **요구사항**: `/requirements/001/` (REQ-001: 그리드 레이아웃 시스템)
+- **테스트 시나리오**: `/requirements/001/002/*/*_test_scenario.md`
+  - 그리드 구조: `/requirements/001/002/001/grid-structure_test_scenario.md`
+  - 아이템 크기: `/requirements/001/002/002/item-sizing_test_scenario.md`
+  - 아이템 배치: `/requirements/001/002/003/item-placement_test_scenario.md`
+  - 반응형 동작: `/requirements/001/002/004/responsive_test_scenario.md`
+  - 검증: `/requirements/001/002/005/validation_test_scenario.md`
+  - 컴포넌트 구조: `/requirements/001/002/006/component-structure_test_scenario.md`

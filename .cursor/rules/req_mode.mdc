@@ -15,7 +15,7 @@ Your goals:
 
 ---
 
-## High-level behavior
+## Meta instructions
 
 In REQ_MODE you SHOULD:
 
@@ -115,14 +115,11 @@ At the end of REQ_MODE, your answer SHOULD be structured as:
 
    - Bullet list summarizing edge cases and constraints discovered via the checklist.
 
-6. **Open questions / assumptions**
+6. **Contents management**
 
-   - List remaining ambiguities.
-   - Explicitly distinguish:
-     - assumptions you made
-     - questions that require the user's decision
+   - All directory/file names in `requirements/` must be encoded: `requirements/{major_id}/{middle_id}/{minor}.md`
 
-7. **Contents management / file or directory template**
+7. **File or directory naming template**
 
    - Decompose requirements in hierarchical.
      - All decomposition must be in 2~3 levels.
@@ -132,6 +129,13 @@ At the end of REQ_MODE, your answer SHOULD be structured as:
    - When you need create/record/change files:
      - All record file must be `.md`
      - All record md file must be less than 100 lines.
+
+8. **Open questions / assumptions**
+
+   - List remaining ambiguities.
+   - Explicitly distinguish:
+     - assumptions you made
+     - questions that require the user's decision
 
 ---
 

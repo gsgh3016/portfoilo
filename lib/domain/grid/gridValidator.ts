@@ -1,13 +1,14 @@
 /**
  * 그리드 검증 로직
  *
- * R7 관련: 아이템 겹침 방지, 오버플로우 검증, 유효성 검증
+ * REQ-001-002-005 (R7): 검증
+ * - 아이템 겹침 방지, 오버플로우 검증, 유효성 검증
  */
 
 import { GridItem, GridValidationError } from "./types";
 
 /**
- * 위치 유효성 검증
+ * 위치 유효성 검증 (REQ-001-002-005: R7.4)
  * @param item 그리드 아이템
  * @returns 유효성 검증 결과
  */
@@ -41,7 +42,7 @@ export function validateItemPosition(item: GridItem): {
 }
 
 /**
- * 오버플로우 검증
+ * 오버플로우 검증 (REQ-001-002-004: R6.3)
  * @param item 그리드 아이템
  * @param columnCount 현재 컬럼 수
  * @returns 오버플로우 검증 결과
@@ -70,7 +71,7 @@ export function validateOverflow(
 }
 
 /**
- * 두 아이템이 겹치는지 확인
+ * 두 아이템이 겹치는지 확인 (REQ-001-002-005: R7.1)
  * @param itemA 첫 번째 아이템
  * @param itemB 두 번째 아이템
  * @returns 겹침 여부
@@ -91,7 +92,7 @@ export function checkOverlap(itemA: GridItem, itemB: GridItem): boolean {
 }
 
 /**
- * 겹침 검증
+ * 겹침 검증 (REQ-001-002-005: R7.2, R7.3)
  * @param items 그리드 아이템 배열
  * @returns 겹침 검증 결과
  */
@@ -124,7 +125,8 @@ export function validateOverlap(items: GridItem[]): {
 }
 
 /**
- * 전체 검증 (위치 유효성 + 오버플로우 + 겹침)
+ * 전체 검증 (REQ-001-002-005: R7)
+ * 위치 유효성 + 오버플로우 + 겹침 검증
  * @param items 그리드 아이템 배열
  * @param columnCount 현재 컬럼 수
  * @returns 검증 결과

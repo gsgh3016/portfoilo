@@ -115,6 +115,16 @@ Your REVIEW_MODE answer SHOULD be structured as:
   - `2) extract function X`
   - `3) clarify requirement Y with stakeholder`
 
+6. **Review report format**
+
+- Reference the requirement id map in each level's README file.
+- Version review reports by major id. That means report file must be in same major directory.
+  - The versioning starts with `01` and has 2 digits.
+  - If you are creating an additional review report in a major directory where another review report already exists, create it by adding +1 to the current latest version. e.g.) `01` -> `02`
+  - Add version as prefix in file name. e.g.) `REVIEW_REPORT_03.md`
+- All report must has its own summary md file: `requirements/{major_id}/REVIEW_REPORT_04.md` -> `requirements/{major_id}/REVIEW_REPORT_SUMMARY_04.md`.
+  - The content in summary md file might be high ratio of analysis/feedback for next requirement mining/implementing/refactoring etc.
+
 ---
 
 ## Interaction with other modes

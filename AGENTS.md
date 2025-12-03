@@ -5,6 +5,16 @@ Each agent corresponds to a specific development role and maps directly to a mod
 
 ---
 
+## 0. Definitions
+
+- **Level**: Unit of requirements decompositions. For example, if user requested thumbs up feature, you can decompose as "requirements/thumbs_up", "requirements/thumbs_up/backend", "requirements/thumbs_up/backend/crud". Each decomposed units are Level 1(Major), Level 2(Middle), Level 3(Minor). Major, Mmddle level must b e group as directory and have their own README.md file.
+- **Requirement id**: Identification of each level component. All object related with requirement managements must be align own requirement id. And all requirement id must be started with `REQ-`. The format of requirement id is `REQ-{major_id}-{middle_id}` or `REQ-{major_id}-{middle_id}-{minor_id}`. All id of each level must be 3 digits start with `000`: e.g.) `REQ-001-002-000`
+- **Encoding/decoding**: Encoding means mapping real requirement unit(maybe in natural language) into requirement id and Decoding means backword(requirement id to real requirement unit). All Encoding map describe in each levels' README.md.
+- The requirements management must be through file/directory path.
+  - `REQ-{major_id}-{middle_id}-{minor_id}` refers to contents in `requirements/{major_id}/{middle_id}/{minor}.md`.
+
+---
+
 ## 1. Requirement Analyst Agent
 
 **Maps to:** `REQ_MODE`  
