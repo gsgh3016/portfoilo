@@ -13,12 +13,6 @@ export interface GridItem {
   component: React.ComponentType;
 }
 
-export interface GridConfig {
-  colWidth: number;
-  rowHeight: number;
-  gap: number;
-}
-
 export interface GridValidationError {
   type: "invalid_position" | "overflow" | "overlap";
   message: string;

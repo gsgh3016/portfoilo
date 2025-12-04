@@ -54,9 +54,76 @@
 
 ---
 
+## R6.4. 리사이즈 이벤트 최적화 (useThrottle)
+
+### TS-R6.4.1: useThrottle 기본 동작
+
+**ID**: TS-R6.4.1  
+**규칙**: R6.1, R6.2 (성능 최적화)  
+**설명**: delay 시간 내 다중 호출 시 마지막 호출만 실행되는지 검증
+
+**Given**: useThrottle 훅이 생성되고, delay가 100ms로 설정됨  
+**When**: delay 시간(100ms) 내에 함수가 여러 번 호출될 때  
+**Then**: 첫 번째 호출은 즉시 실행되고, 이후 호출은 delay 경과 후 마지막 호출만 실행됨
+
+**Given**: useThrottle 훅이 생성되고, delay가 100ms로 설정됨  
+**When**: delay 시간(100ms) 이상 경과 후 함수가 호출될 때  
+**Then**: 함수가 즉시 실행됨
+
+---
+
+### TS-R6.4.2: useThrottle 타이밍 검증
+
+**ID**: TS-R6.4.2  
+**규칙**: R6.1, R6.2 (성능 최적화)  
+**설명**: delay 경계에서의 정확한 타이밍 동작 검증
+
+**Given**: useThrottle 훅이 생성되고, delay가 100ms로 설정됨  
+**When**: 함수가 호출되고, 50ms 후 다시 호출될 때  
+**Then**: 첫 번째 호출은 즉시 실행되고, 두 번째 호출은 50ms 후(남은 시간) 실행됨
+
+**Given**: useThrottle 훅이 생성되고, delay가 100ms로 설정됨  
+**When**: 함수가 호출되고, 100ms 이상 경과 후 다시 호출될 때  
+**Then**: 두 번째 호출도 즉시 실행됨
+
+---
+
+### TS-R6.4.3: useThrottle 인자 전달
+
+**ID**: TS-R6.4.3  
+**규칙**: R6.1, R6.2 (성능 최적화)  
+**설명**: 쓰로틀링된 함수에 인자가 올바르게 전달되는지 검증
+
+**Given**: useThrottle 훅이 생성되고, 인자를 받는 함수가 전달됨  
+**When**: 쓰로틀링된 함수에 인자를 전달하여 호출할 때  
+**Then**: 원본 함수에 인자가 올바르게 전달됨
+
+**Given**: useThrottle 훅이 생성되고, 여러 인자를 받는 함수가 전달됨  
+**When**: 쓰로틀링된 함수에 여러 인자를 전달하여 호출할 때  
+**Then**: 원본 함수에 모든 인자가 올바르게 전달됨
+
+---
+
+### TS-R6.4.4: GridContainer와 useThrottle 통합
+
+**ID**: TS-R6.4.4  
+**규칙**: R6.1, R6.2 (성능 최적화)  
+**설명**: GridContainer의 리사이즈 이벤트에 useThrottle이 적용되는지 검증
+
+**Given**: GridContainer가 렌더링되고, screenWidth prop이 제공되지 않음  
+**When**: window.resize 이벤트가 빠르게 여러 번 발생할 때  
+**Then**: 리사이즈 핸들러가 쓰로틀링되어 과도한 재렌더링이 발생하지 않음
+
+**Given**: GridContainer가 렌더링되고, screenWidth prop이 제공되지 않음  
+**When**: window.innerWidth가 변경되고 resize 이벤트가 발생할 때  
+**Then**: 쓰로틀링된 핸들러가 실행되어 컬럼 수가 올바르게 업데이트됨
+
+---
+
 ## 관련 문서
 
 - **규칙**: [responsive.md](./responsive.md)
 - **그리드 구조**: [../001/grid-structure.md](../001/grid-structure.md)
 - **검증**: [../005/validation.md](../005/validation.md)
+- **제약사항**: [../../004/constraints.md](../../004/constraints.md)
 

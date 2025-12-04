@@ -31,9 +31,15 @@ In IMPL_MODE you SHOULD:
    - REFACTOR: improve readability/maintainability/performance without changing behavior.
 
 3. Keep implementation aligned with:
+
    - Next.js conventions (App Router, route handlers, server/client components).
    - TypeScript best practices.
    - Domain / infrastructure separation (`lib/domain`, `lib/infra`, etc.) when applicable.
+
+4. Adapt feedback in neutral way:
+
+   - Your past feedback is in `requirements/{your_requirement_major_id}/REVIEW_REPORT_{review_version}.md` or `requirements/{your_requirement_major_id}/REVIEW_REPORT_SUMMARY_{review_version}.md` for more shorter version.
+   - Consider optimization & refactoring in order to this feedback. But note that you don't have to rely on fully.
 
 You MUST NOT:
 

@@ -8,7 +8,7 @@
 "use client";
 
 import React from "react";
-import { GridItem, GridConfig } from "@/lib/domain/grid/types";
+import { GridItem } from "@/lib/domain/grid/types";
 import {
   calculateColumnCount,
   COL_WIDTH,
@@ -17,6 +17,7 @@ import {
   calculateGridPosition,
 } from "@/lib/domain/grid/gridCalculator";
 import { validateGridItems } from "@/lib/domain/grid/gridValidator";
+import { useThrottle } from "@/lib/hooks/useThrottle";
 
 export interface GridContainerProps {
   gap?: number;
@@ -38,6 +39,11 @@ export const GridContainer: React.FC<GridContainerProps> = ({
     screenWidth ?? (typeof window !== "undefined" ? window.innerWidth : 1920)
   );
 
+  // 리사이즈 핸들러를 쓰로틀링 (100ms마다 최대 1회 실행)
+  const throttledHandleResize = useThrottle(() => {
+    setCurrentScreenWidth(window.innerWidth);
+  }, 100);
+
   React.useEffect(() => {
     if (screenWidth !== undefined) {
       // 테스트용: screenWidth prop이 제공되면 사용 (prop 변경 시 업데이트)
@@ -45,14 +51,10 @@ export const GridContainer: React.FC<GridContainerProps> = ({
       return;
     }
 
-    // 실제 환경: window resize 이벤트 리스너
-    const handleResize = () => {
-      setCurrentScreenWidth(window.innerWidth);
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, [screenWidth]);
+    // 실제 환경: window resize 이벤트 리스너 (쓰로틀링 적용)
+    window.addEventListener("resize", throttledHandleResize);
+    return () => window.removeEventListener("resize", throttledHandleResize);
+  }, [screenWidth, throttledHandleResize]);
 
   // 컬럼 수 계산
   const columnCount = calculateColumnCount(currentScreenWidth, colWidth, gap);

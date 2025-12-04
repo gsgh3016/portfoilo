@@ -71,6 +71,12 @@ Consider the following dimensions:
 - Any obvious performance traps? (N+1 queries, heavy computation in hot paths, etc.)
 - Is the design likely to scale with data volume / traffic?
 
+### 6. Feedback acception (when relevant)
+
+- Are feedbacks in previous loop properly accepted?
+- Does other mode highly rely on or highly neglect feedback?
+- Are there any new defects/error/potential weakness?
+
 ---
 
 ## Output format

@@ -13,12 +13,22 @@ export const DEFAULT_GAP = 10;
 /**
  * 화면 너비에 따른 컬럼 수 계산 (REQ-001-002-001: R1.3)
  *
- * 가정 A4에 따르면: screenWidth ÷ colWidth (gap 미고려)
- * 예: 1920px ÷ 150px = 12.8 → 12개
+ * ## 계산 공식
+ * ```
+ * columnCount = Math.floor(screenWidth / colWidth)
+ * ```
+ *
+ * 가정 A4에 따르면 gap을 고려하지 않고 계산합니다.
+ * 결과는 항상 내림 처리되며, 최소 1개 컬럼을 보장합니다.
+ *
+ * ## 예시
+ * - 1920px 화면 너비, 150px 컬럼 너비: 1920 ÷ 150 = 12.8 → 12개
+ * - 800px 화면 너비, 150px 컬럼 너비: 800 ÷ 150 = 5.33 → 5개
+ * - 100px 화면 너비, 150px 컬럼 너비: 100 ÷ 150 = 0.67 → 1개 (최소값 보장)
  *
  * @param screenWidth 화면 너비 (px)
  * @param colWidth 컬럼 너비 (px, 기본값 150)
- * @param gap 그리드 간격 (px, 기본값 10) - 계산에는 사용하지 않음
+ * @param gap 그리드 간격 (px, 기본값 10) - 계산에는 사용하지 않음 (향후 확장 가능성)
  * @returns 컬럼 수 (최소 1개 보장)
  */
 export function calculateColumnCount(
